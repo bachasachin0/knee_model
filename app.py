@@ -6,13 +6,10 @@ def main():
 
     # Load the trained models
     recovery_time_model = load('models/trained_recovery_time_model.joblib')
-    pain_curability_model = load('models/trained_pain_curability_model.joblib')
-
-
 
     # Title and description of the app
     st.title("Knee Recovery Prediction")
-    st.write("This application predicts the recovery time and pain curability percentage based on the patient's knee condition.")
+    st.write("This application predicts the recovery time based on the patient's knee condition.")
 
     # User input for prediction
     patient_type = st.selectbox("Patient Type", ["Normal", "Mild", "Moderate", "Severe"])
@@ -48,8 +45,6 @@ def main():
     # Store prediction results in session state to retain across button clicks
     if 'recovery_time_output' not in st.session_state:
         st.session_state.recovery_time_output = None
-    if 'pain_curability_output' not in st.session_state:
-        st.session_state.pain_curability_output = None
 
     # Button for predicting recovery time
     if st.button("Predict Recovery Time (Weeks)"):
@@ -57,17 +52,9 @@ def main():
         # Round the prediction to the nearest whole number
         st.session_state.recovery_time_output = f"Predicted Recovery Time: {round(recovery_time_prediction[0])} weeks"
 
-    # Button for predicting pain curability
-    if st.button("Predict Pain Curability (%)"):
-        pain_curability_prediction = pain_curability_model.predict(input_data_df)
-        st.session_state.pain_curability_output = f"Predicted Pain Curability: {pain_curability_prediction[0]:.2f}%"
-
-    # Display the results, if any
+    # Display the results, if any, in big letters
     if st.session_state.recovery_time_output:
-        st.write(st.session_state.recovery_time_output)
-
-    if st.session_state.pain_curability_output:
-        st.write(st.session_state.pain_curability_output)
+        st.markdown(f"### {st.session_state.recovery_time_output.upper()}")
 
 if __name__ == "__main__":
     main()
